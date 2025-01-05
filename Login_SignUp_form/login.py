@@ -1,10 +1,11 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QMessageBox
-from database import UserStorage
+from database import UserLoginDatabase
 
 class LoginWidget(QWidget):
-    def __init__(self, switch_to_register):
+    def __init__(self, switch_to_register, switch_to_resume):
         super().__init__()
         self.switch_to_register = switch_to_register
+        self.switch_to_resume = switch_to_resume
         self.initUI()
 
     def initUI(self):
@@ -25,7 +26,7 @@ class LoginWidget(QWidget):
         self.login_button.clicked.connect(self.login)
         layout.addWidget(self.login_button)
 
-        self.register_button = QPushButton('Register')
+        self.register_button = QPushButton('Go to Sign Up')
         self.register_button.clicked.connect(self.switch_to_register)
         layout.addWidget(self.register_button)
 
@@ -35,8 +36,11 @@ class LoginWidget(QWidget):
         username = self.username_input.text()
         password = self.password_input.text()
 
-        if UserStorage().validate_user(username, password):
+        if UserLoginDatabase().validate_user(username, password):
             QMessageBox.information(self, 'Success', 'Login successful!')
-            # Move to the main widget
+            self.switch_to_resume(username)
         else:
             QMessageBox.warning(self, 'Error', 'Invalid username or password.')
+
+        self.username_input.clear()
+        self.password_input.clear()

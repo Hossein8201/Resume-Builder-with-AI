@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QMessageBox
-from database import UserStorage
+from database import UserLoginDatabase
 
 class RegisterWidget(QWidget):
     def __init__(self, switch_to_login, switch_to_info_form):
@@ -33,7 +33,7 @@ class RegisterWidget(QWidget):
         layout.addWidget(self.confirm_password_label)
         layout.addWidget(self.confirm_password_input)
 
-        self.register_button = QPushButton('Register')
+        self.register_button = QPushButton('Sign Up')
         self.register_button.clicked.connect(self.register)
         layout.addWidget(self.register_button)
 
@@ -51,12 +51,20 @@ class RegisterWidget(QWidget):
 
         if password != confirm_password:
             QMessageBox.warning(self, 'Error', 'Passwords do not match.')
+            self.username_input.clear()
+            self.email_input.clear()
+            self.password_input.clear()
+            self.confirm_password_input.clear()
             return
 
-        if UserStorage().user_exists(email):
-            QMessageBox.warning(self, 'Error', 'Email is already registered.')
+        if UserLoginDatabase().user_exists(username):
+            QMessageBox.warning(self, 'Error', 'username is already signed up.')
+            self.username_input.clear()
+            self.email_input.clear()
+            self.password_input.clear()
+            self.confirm_password_input.clear()
             return
 
-        UserStorage().add_user(username, email, password)
-        QMessageBox.information(self, 'Success', 'Registration successful!')
+        UserLoginDatabase().add_user(username, email, password)
+        QMessageBox.information(self, 'Success', 'signing up successful!')
         self.switch_to_info_form()

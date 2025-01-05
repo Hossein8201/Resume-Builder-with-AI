@@ -1,25 +1,26 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QStackedWidget, QMessageBox
-from login import LoginWidget
-from register import RegisterWidget
+from Login_SignUp_form.login import LoginWidget
+from Login_SignUp_form.register import RegisterWidget
 from Information_form.personal_info import PersonalInfoWidget
 from Information_form.education import EducationWidget
 from Information_form.work_experience import WorkExperienceWidget
 from Information_form.skills import SkillsWidget
-from Information_form.database import UserStorage
+from database import UserInformationDatabase
+from Resume_Template.resume_template import ResumeTemplateWidget
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Resume Builder")
+        self.setWindowTitle("Resume Builder Application")
         self.setGeometry(100, 100, 1200, 800)
         self.initUI()
-        self.storage = UserStorage()
+        self.storage = UserInformationDatabase()
         self.user_info = {}
 
     def initUI(self):
         self.stacked_widget = QStackedWidget()
 
-        self.login_widget = LoginWidget(self.switch_to_register)
+        self.login_widget = LoginWidget(self.switch_to_register, self.switch_to_resume)
         self.register_widget = RegisterWidget(self.switch_to_login, self.switch_to_personal_info)
         self.personal_info_widget = PersonalInfoWidget(self.switch_to_education)
         self.education_widget = EducationWidget(self.switch_to_work_experience, self.switch_to_personal_info)
@@ -43,6 +44,7 @@ class MainWindow(QMainWindow):
         self.stacked_widget.setCurrentWidget(self.login_widget)
 
     def switch_to_personal_info(self):
+        self.user_info['username'] = self.register_widget.username_input.text()
         self.stacked_widget.setCurrentWidget(self.personal_info_widget)
 
     def switch_to_education(self):
@@ -72,6 +74,11 @@ class MainWindow(QMainWindow):
         }
         self.stacked_widget.setCurrentWidget(self.skills_widget)
 
+    def switch_to_resume(self, username):
+        self.resume_template_widget = ResumeTemplateWidget(username)
+        self.stacked_widget.addWidget(self.resume_template_widget)
+        self.stacked_widget.setCurrentWidget(self.resume_template_widget)
+
     def save_information(self):
         self.user_info['skills'] = {
             'skills': self.skills_widget.skills_input.toPlainText(), 
@@ -80,6 +87,7 @@ class MainWindow(QMainWindow):
         
         if self.is_data_complete():
             info = (
+                self.user_info['username'],
                 self.user_info['personal_info']['name'],
                 self.user_info['personal_info']['contact'],
                 self.user_info['personal_info']['email'],
