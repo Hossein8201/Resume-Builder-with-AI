@@ -6,13 +6,14 @@ from Information_Form.education import EducationWidget
 from Information_Form.work_experience import WorkExperienceWidget
 from Information_Form.skills import SkillsWidget
 from Database.user_info_database import UserInformationDatabase
-from Resume_Builder.resume_template import ResumeTemplateWidget
+from Resume_Builder.resume_builder import ResumeBuilderWidget
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Resume Builder Application")
         self.setGeometry(100, 100, 1200, 800)
+        self.setFixedSize(1200, 800)
         self.initUI()
         self.storage = UserInformationDatabase()
         self.user_info = {}
@@ -43,8 +44,8 @@ class MainWindow(QMainWindow):
     def switch_to_login(self):
         self.stacked_widget.setCurrentWidget(self.login_widget)
 
-    def switch_to_personal_info(self):
-        self.user_info['username'] = self.register_widget.username_input.text()
+    def switch_to_personal_info(self, username):
+        self.user_info['username'] = username
         self.stacked_widget.setCurrentWidget(self.personal_info_widget)
 
     def switch_to_education(self):
@@ -75,7 +76,7 @@ class MainWindow(QMainWindow):
         self.stacked_widget.setCurrentWidget(self.skills_widget)
 
     def switch_to_resume(self, username):
-        self.resume_template_widget = ResumeTemplateWidget(username)
+        self.resume_template_widget = ResumeBuilderWidget(username, self.switch_to_personal_info)
         self.stacked_widget.addWidget(self.resume_template_widget)
         self.stacked_widget.setCurrentWidget(self.resume_template_widget)
 

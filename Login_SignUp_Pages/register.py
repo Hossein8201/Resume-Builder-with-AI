@@ -67,4 +67,4 @@ class RegisterWidget(QWidget):
 
         UserLoginDatabase().add_user(username, email, password)
         QMessageBox.information(self, 'Success', 'signing up successful!')
-        self.switch_to_info_form()
+        self.switch_to_info_form(username)

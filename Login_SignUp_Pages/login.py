@@ -41,6 +41,5 @@ class LoginWidget(QWidget):
             self.switch_to_resume(username)
         else:
             QMessageBox.warning(self, 'Error', 'Invalid username or password.')
-
-        self.username_input.clear()
-        self.password_input.clear()
+            self.username_input.clear()
+            self.password_input.clear()

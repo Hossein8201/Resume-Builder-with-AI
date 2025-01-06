@@ -14,11 +14,6 @@ class UserResumeAddressDatabase:
                                     resume_path TEXT
                                 )''')
             
-    def delete_existing_resume_path(self, username):
-        with self.conn:
-            self.conn.execute('DELETE FROM user_resumeAddress WHERE username = ?', (username,))
-            
     def save_resume_path(self, username, resume_path):
-        self.delete_existing_resume_path(username)
         with self.conn:
             self.conn.execute('INSERT INTO user_resumeAddress (username, resume_path) VALUES (?, ?)', (username, resume_path))
