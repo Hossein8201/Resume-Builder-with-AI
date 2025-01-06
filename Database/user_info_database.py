@@ -1,34 +1,9 @@
 import sqlite3
 
-class UserLoginDatabase:
-    def __init__(self):
-        self.conn = sqlite3.connect('user_data.db')
-        self.create_tables()
-
-    def create_tables(self):
-        with self.conn:
-            self.conn.execute('''CREATE TABLE IF NOT EXISTS users (
-                                    id INTEGER PRIMARY KEY,
-                                    username TEXT NOT NULL,
-                                    email TEXT NOT NULL,
-                                    password TEXT NOT NULL)''')
-
-    def add_user(self, username, email, password):
-        with self.conn:
-            self.conn.execute('INSERT INTO users (username, email, password) VALUES (?, ?, ?)', (username, email, password))
-
-    def validate_user(self, username, password):
-        cursor = self.conn.execute('SELECT * FROM users WHERE username=? AND password=?', (username, password))
-        return cursor.fetchone() is not None
-
-    def user_exists(self, username):
-        cursor = self.conn.execute('SELECT * FROM users WHERE username=?', (username,))
-        return cursor.fetchone() is not None
-
 
 class UserInformationDatabase:
     def __init__(self):
-        self.conn = sqlite3.connect('resume_builder.db')
+        self.conn = sqlite3.connect('user_information_data.db')
         self.create_tables()
 
     def create_tables(self):
@@ -51,8 +26,13 @@ class UserInformationDatabase:
                                     skills TEXT,
                                     certifications TEXT
                                 )''')
+            
+    def delete_existing_user_info(self, username):
+        with self.conn:
+            self.conn.execute('DELETE FROM user_information WHERE username = ?', (username,))
 
     def add_user_info(self, info):
+        self.delete_existing_user_info(info[0])
         with self.conn:
             self.conn.execute('''INSERT INTO user_information (
                                     username, name, contact, email, address,

@@ -1,5 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QMessageBox, QFileDialog
-from database import UserInformationDatabase
+from PyQt5.QtCore import Qt
+from Database.user_info_database import UserInformationDatabase
+from Database.user_resumeAddress_database import UserResumeAddressDatabase
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import os
@@ -12,8 +14,9 @@ class ResumeTemplateWidget(QWidget):
 
     def initUI(self):
         main_layout = QVBoxLayout()
-
+        
         self.label = QLabel('Select a Resume Template')
+        self.label.setAlignment(Qt.AlignCenter)
         main_layout.addWidget(self.label)
 
         self.template1_button = QPushButton('Template 1')
@@ -41,7 +44,7 @@ class ResumeTemplateWidget(QWidget):
 
         if save_path:
             self.create_pdf(template, user_info, save_path)
-            # UserInformationDatabase().save_resume_path(self.username, save_path)
+            UserResumeAddressDatabase().save_resume_path(self.username, save_path)
             QMessageBox.information(self, 'Success', 'Resume generated and saved successfully!')
 
     def create_pdf(self, template, user_info, save_path):

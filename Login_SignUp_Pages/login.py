@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QMessageBox
-from database import UserLoginDatabase
+from Database.user_login_database import UserLoginDatabase
 
 class LoginWidget(QWidget):
     def __init__(self, switch_to_register, switch_to_resume):

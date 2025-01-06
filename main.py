@@ -1,12 +1,12 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QStackedWidget, QMessageBox
-from Login_SignUp_form.login import LoginWidget
-from Login_SignUp_form.register import RegisterWidget
-from Information_form.personal_info import PersonalInfoWidget
-from Information_form.education import EducationWidget
-from Information_form.work_experience import WorkExperienceWidget
-from Information_form.skills import SkillsWidget
-from database import UserInformationDatabase
-from Resume_Template.resume_template import ResumeTemplateWidget
+from Login_SignUp_Pages.login import LoginWidget
+from Login_SignUp_Pages.register import RegisterWidget
+from Information_Form.personal_info import PersonalInfoWidget
+from Information_Form.education import EducationWidget
+from Information_Form.work_experience import WorkExperienceWidget
+from Information_Form.skills import SkillsWidget
+from Database.user_info_database import UserInformationDatabase
+from Resume_Builder.resume_template import ResumeTemplateWidget
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -105,7 +105,7 @@ class MainWindow(QMainWindow):
             )
             self.storage.add_user_info(info)
             QMessageBox.information(self, 'Success', 'Information saved successfully!')
-            # Transition to the next section or reset the form
+            self.switch_to_resume(self.user_info['username'])
         else:
             QMessageBox.warning(self, 'Error', 'Please complete all fields before saving.')
 
