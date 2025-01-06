@@ -1,4 +1,6 @@
-from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QMessageBox
+from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QMessageBox, QFrame
+from PyQt5.QtGui import QPalette, QColor, QPixmap
+from PyQt5.QtCore import QTimer
 from Database.user_login_database import UserLoginDatabase
 
 class RegisterWidget(QWidget):
@@ -9,39 +11,72 @@ class RegisterWidget(QWidget):
         self.initUI()
 
     def initUI(self):
-        layout = QVBoxLayout()
+        self.setFixedSize(1200, 800)
 
-        self.username_label = QLabel('Username:')
+        # Set background color
+        self.setAutoFillBackground(True)
+        palette = self.palette()
+        palette.setColor(QPalette.Window, QColor("white"))
+        self.setPalette(palette)
+
+        main_layout = QHBoxLayout()
+
+        # Image slider
+        self.image_label = QLabel(self)
+        self.image_label.setFixedSize(700, 467)
+        main_layout.addWidget(self.image_label)
+
+        self.image_index = 1
+        self.update_image()
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.update_image)
+        self.timer.start(8000)  # Change image every 8 seconds
+
+        # Right side layout
+        right_frame = QFrame()
+        right_frame.setFixedSize(450, 350)
+        right_frame.setStyleSheet("background-color: transparent;")
+        right_layout = QVBoxLayout(right_frame)
+
         self.username_input = QLineEdit()
-        layout.addWidget(self.username_label)
-        layout.addWidget(self.username_input)
+        self.username_input.setPlaceholderText('Username')
+        self.username_input.setStyleSheet("QLineEdit { background-color: lightblue; border-radius: 10px; font-size: 20px; } QLineEdit:focus { border: 2px solid green; }")
+        right_layout.addWidget(self.username_input)
 
-        self.email_label = QLabel('Email:')
         self.email_input = QLineEdit()
-        layout.addWidget(self.email_label)
-        layout.addWidget(self.email_input)
+        self.email_input.setPlaceholderText('Email')
+        self.email_input.setStyleSheet("QLineEdit { background-color: lightblue; border-radius: 10px; font-size: 20px; } QLineEdit:focus { border: 2px solid green; }")
+        right_layout.addWidget(self.email_input)
 
-        self.password_label = QLabel('Password:')
         self.password_input = QLineEdit()
+        self.password_input.setPlaceholderText('Password')
         self.password_input.setEchoMode(QLineEdit.Password)
-        layout.addWidget(self.password_label)
-        layout.addWidget(self.password_input)
+        self.password_input.setStyleSheet("QLineEdit { background-color: lightblue; border-radius: 10px; font-size: 20px; } QLineEdit:focus { border: 2px solid green; }")
+        right_layout.addWidget(self.password_input)
 
-        self.confirm_password_label = QLabel('Confirm Password:')
         self.confirm_password_input = QLineEdit()
+        self.confirm_password_input.setPlaceholderText('Confirm Password')
         self.confirm_password_input.setEchoMode(QLineEdit.Password)
-        layout.addWidget(self.confirm_password_label)
-        layout.addWidget(self.confirm_password_input)
+        self.confirm_password_input.setStyleSheet("QLineEdit { background-color: lightblue; border-radius: 10px; font-size: 20px; } QLineEdit:focus { border: 2px solid green; }")
+        right_layout.addWidget(self.confirm_password_input)
 
         self.register_button = QPushButton('Sign Up')
+        self.register_button.setStyleSheet("background-color: green; color: white; border-radius: 10px; font-size: 20px;")
         self.register_button.clicked.connect(self.register)
-        layout.addWidget(self.register_button)
+        right_layout.addWidget(self.register_button)
 
         self.login_button = QPushButton('Back to Login')
+        self.login_button.setStyleSheet("background-color: green; color: white; border-radius: 10px; font-size: 20px;")
         self.login_button.clicked.connect(self.switch_to_login)
-        layout.addWidget(self.login_button)
+        right_layout.addWidget(self.login_button)
 
-        self.setLayout(layout)
+        main_layout.addWidget(right_frame)
+        self.setLayout(main_layout)
+
+    def update_image(self):
+        pixmap = QPixmap(f'.images/{self.image_index}.png')
+        self.image_label.setPixmap(pixmap)
+        self.image_index = (self.image_index % 5) + 1
 
     def register(self):
         username = self.username_input.text()
