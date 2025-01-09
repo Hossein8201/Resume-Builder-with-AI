@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QMessageBox, QFrame
-from PyQt5.QtGui import QPalette, QColor, QPixmap
-from PyQt5.QtCore import QTimer
+from PyQt5.QtGui import QPalette, QColor, QPixmap, QCursor
+from PyQt5.QtCore import QTimer, Qt
 from Database.user_login_database import UserLoginDatabase
 
 class LoginWidget(QWidget):
@@ -40,22 +40,65 @@ class LoginWidget(QWidget):
 
         self.username_input = QLineEdit()
         self.username_input.setPlaceholderText('Username')
-        self.username_input.setStyleSheet("QLineEdit { background-color: lightblue; border-radius: 10px; font-size: 20px; } QLineEdit:focus { border: 2px solid green; }")
+        self.username_input.setStyleSheet("""
+            QLineEdit { 
+                background-color: lightblue; 
+                border-radius: 10px; 
+                font-size: 20px; 
+            } 
+            QLineEdit:focus { 
+                border: 2px solid green;   
+            }
+        """)        
         right_layout.addWidget(self.username_input)
 
         self.password_input = QLineEdit()
         self.password_input.setPlaceholderText('Password')
         self.password_input.setEchoMode(QLineEdit.Password)
-        self.password_input.setStyleSheet("QLineEdit { background-color: lightblue; border-radius: 10px; font-size: 20px; } QLineEdit:focus { border: 2px solid green; }")
+        self.password_input.setStyleSheet("""
+            QLineEdit { 
+                background-color: lightblue; 
+                border-radius: 10px; 
+                font-size: 20px; 
+            } 
+            QLineEdit:focus { 
+                border: 2px solid green;   
+            }
+        """)
         right_layout.addWidget(self.password_input)
 
         self.login_button = QPushButton('Login')
-        self.login_button.setStyleSheet("background-color: green; color: white; border-radius: 10px; font-size: 20px;")
+        self.login_button.setCursor(QCursor(Qt.PointingHandCursor))
+        self.login_button.setStyleSheet("""
+            QPushButton {
+                background-color: lightgreen;
+                color: black;
+                border-radius: 10px;
+                font-size: 20px;
+            }
+            QPushButton:hover {
+                background-color: green;
+                color: white;
+            }
+        """)
         self.login_button.clicked.connect(self.login)
         right_layout.addWidget(self.login_button)
 
         self.register_button = QPushButton('Go to Sign Up')
-        self.register_button.setStyleSheet("background-color: green; color: white; border-radius: 10px; font-size: 20px;")
+        self.register_button.setCursor(QCursor(Qt.PointingHandCursor))
+        self.register_button.setStyleSheet("""
+            QPushButton {
+                background-color: lightgreen;
+                color: black;
+                border-radius: 10px;
+                font-size: 20px;
+            }
+            QPushButton:hover {
+                background-color: green;
+                color: white;
+
+            }
+        """)
         self.register_button.clicked.connect(self.switch_to_register)
         right_layout.addWidget(self.register_button)
 

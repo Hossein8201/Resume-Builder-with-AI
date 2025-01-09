@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QMessageBox, QFrame
-from PyQt5.QtGui import QPalette, QColor, QPixmap
-from PyQt5.QtCore import QTimer
+from PyQt5.QtGui import QPalette, QColor, QPixmap, QCursor, QRegExpValidator
+from PyQt5.QtCore import QTimer, Qt, QRegExp
 from Database.user_login_database import UserLoginDatabase
 
 class RegisterWidget(QWidget):
@@ -40,33 +40,99 @@ class RegisterWidget(QWidget):
 
         self.username_input = QLineEdit()
         self.username_input.setPlaceholderText('Username')
-        self.username_input.setStyleSheet("QLineEdit { background-color: lightblue; border-radius: 10px; font-size: 20px; } QLineEdit:focus { border: 2px solid green; }")
+        self.username_input.setStyleSheet("""
+            QLineEdit { 
+                background-color: lightblue; 
+                border-radius: 10px; 
+                font-size: 20px; 
+            } 
+            QLineEdit:focus { 
+                border: 2px solid green;   
+            }
+        """)        
         right_layout.addWidget(self.username_input)
 
         self.email_input = QLineEdit()
         self.email_input.setPlaceholderText('Email')
-        self.email_input.setStyleSheet("QLineEdit { background-color: lightblue; border-radius: 10px; font-size: 20px; } QLineEdit:focus { border: 2px solid green; }")
+        self.email_input.setStyleSheet("""
+            QLineEdit { 
+                background-color: lightblue; 
+                border-radius: 10px; 
+                font-size: 20px; 
+            } 
+            QLineEdit:focus { 
+                border: 2px solid green;   
+            }
+        """)        
         right_layout.addWidget(self.email_input)
+
+        email_regex = QRegExp('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+        email_validator = QRegExpValidator(email_regex, self.email_input)
+        self.email_input.setValidator(email_validator)
 
         self.password_input = QLineEdit()
         self.password_input.setPlaceholderText('Password')
         self.password_input.setEchoMode(QLineEdit.Password)
-        self.password_input.setStyleSheet("QLineEdit { background-color: lightblue; border-radius: 10px; font-size: 20px; } QLineEdit:focus { border: 2px solid green; }")
+        self.password_input.setStyleSheet("""
+            QLineEdit { 
+                background-color: lightblue; 
+                border-radius: 10px; 
+                font-size: 20px; 
+            } 
+            QLineEdit:focus { 
+                border: 2px solid green;   
+            }
+        """)
         right_layout.addWidget(self.password_input)
 
         self.confirm_password_input = QLineEdit()
         self.confirm_password_input.setPlaceholderText('Confirm Password')
         self.confirm_password_input.setEchoMode(QLineEdit.Password)
-        self.confirm_password_input.setStyleSheet("QLineEdit { background-color: lightblue; border-radius: 10px; font-size: 20px; } QLineEdit:focus { border: 2px solid green; }")
+        self.confirm_password_input.setStyleSheet("""
+            QLineEdit { 
+                background-color: lightblue; 
+                border-radius: 10px; 
+                font-size: 20px; 
+            } 
+            QLineEdit:focus { 
+                border: 2px solid green;   
+            }
+        """)      
         right_layout.addWidget(self.confirm_password_input)
 
         self.register_button = QPushButton('Sign Up')
-        self.register_button.setStyleSheet("background-color: green; color: white; border-radius: 10px; font-size: 20px;")
+        self.register_button.setCursor(QCursor(Qt.PointingHandCursor))
+        self.register_button.setStyleSheet("""
+            QPushButton {
+                background-color: lightgreen;
+                color: black;
+                border-radius: 10px;
+                font-size: 20px;
+            }
+            QPushButton:hover {
+                background-color: green;
+                color: white;
+
+            }
+        """)
         self.register_button.clicked.connect(self.register)
         right_layout.addWidget(self.register_button)
 
         self.login_button = QPushButton('Back to Login')
-        self.login_button.setStyleSheet("background-color: green; color: white; border-radius: 10px; font-size: 20px;")
+        self.login_button.setCursor(QCursor(Qt.PointingHandCursor))
+        self.login_button.setStyleSheet("""
+            QPushButton {
+                background-color: lightgreen;
+                color: black;
+                border-radius: 10px;
+                font-size: 20px;
+            }
+            QPushButton:hover {
+                background-color: green;
+                color: white;
+
+            }
+        """)
         self.login_button.clicked.connect(self.switch_to_login)
         right_layout.addWidget(self.login_button)
 
@@ -84,16 +150,22 @@ class RegisterWidget(QWidget):
         password = self.password_input.text()
         confirm_password = self.confirm_password_input.text()
 
+        if not username or not email or not password or not confirm_password:
+            QMessageBox.warning(self, 'Error', 'All fields are required.')
+            return
+
         if password != confirm_password:
             QMessageBox.warning(self, 'Error', 'Passwords do not match.')
-            self.username_input.clear()
-            self.email_input.clear()
             self.password_input.clear()
             self.confirm_password_input.clear()
             return
 
+        if not self.email_input.hasAcceptableInput():
+            QMessageBox.warning(self, 'Error', 'Invalid email format.')
+            return
+
         if UserLoginDatabase().user_exists(username):
-            QMessageBox.warning(self, 'Error', 'username is already signed up.')
+            QMessageBox.warning(self, 'Error', 'Username is already signed up.')
             self.username_input.clear()
             self.email_input.clear()
             self.password_input.clear()
@@ -101,5 +173,5 @@ class RegisterWidget(QWidget):
             return
 
         UserLoginDatabase().add_user(username, email, password)
-        QMessageBox.information(self, 'Success', 'signing up successful!')
+        QMessageBox.information(self, 'Success', 'Signing up successful!')
         self.switch_to_info_form(username)
