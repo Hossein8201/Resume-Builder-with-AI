@@ -40,9 +40,9 @@ class PersonalInfoWidget(QWidget):
                 """)
                 flag = 1
             elif flag == 1:
-                label.setStyleSheet("font-size: 18px; margin-bottom: 10px; color: gray;") 
+                label.setStyleSheet("font-size: 18px; color: gray;") 
             else:
-                label.setStyleSheet("font-size: 18px; margin-bottom: 10px; color: black;") 
+                label.setStyleSheet("font-size: 18px; color: black;") 
             cover1_layout.addWidget(label)
         cover1_layout.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
         cover1.setLayout(cover1_layout)
@@ -52,7 +52,7 @@ class PersonalInfoWidget(QWidget):
         cover2 = QWidget()
         cover2.setFixedSize(300, 300)
         logo = QLabel()
-        pixmap = QPixmap(".images/FullLogo.png").copy(120, 100, 300, 300)
+        pixmap = QPixmap(".images/FullLogo.png").copy(125, 100, 300, 300)
         logo.setPixmap(pixmap)
         cover2_layout = QVBoxLayout()
         cover2_layout.addWidget(logo, alignment=Qt.AlignCenter)
@@ -74,8 +74,7 @@ class PersonalInfoWidget(QWidget):
         self.email_input = QLineEdit()
         self.address_input = QLineEdit()
 
-        fields = [("Name", self.name_input), ("Contact", self.contact_input), ("Email", self.email_input), ("Address", self.address_input)]
-        
+        fields = [("Name", self.name_input), ("Contact", self.contact_input), ("Email", self.email_input), ("Address", self.address_input)]    
         for field_name, field_input in fields:
             field_label = QLabel(field_name)
             field_label.setStyleSheet("font-size: 16px;")
@@ -95,7 +94,7 @@ class PersonalInfoWidget(QWidget):
             right_layout.addLayout(field_layout)
         right_layout.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
 
-        self.next_button = QPushButton(' Next >> ')
+        self.next_button = QPushButton('   Next >>   ')
         self.next_button.setCursor(QCursor(Qt.PointingHandCursor))
         self.next_button.setStyleSheet("""
             font-size: 16px;
@@ -104,7 +103,6 @@ class PersonalInfoWidget(QWidget):
             border: 2px solid lightgray;
         """)
         self.next_button.setEnabled(False)
-        
         self.next_button.clicked.connect(self.switch_to_next)
         
         self.name_input.textChanged.connect(self.check_fields)
@@ -115,7 +113,6 @@ class PersonalInfoWidget(QWidget):
         nav_layout = QHBoxLayout()
         nav_layout.addStretch()
         nav_layout.addWidget(self.next_button)
-        
         right_layout.addLayout(nav_layout)
 
         right_layout_widget = QWidget()
