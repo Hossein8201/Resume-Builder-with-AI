@@ -61,7 +61,7 @@ class MainWindow(QMainWindow):
         self.user_info['education'] = {
             'university': self.education_widget.university_input.text(),
             'degree': self.education_widget.degree_input.text(),
-            'graduation_year': self.education_widget.graduation_year_input.value()
+            'graduation_year': self.education_widget.graduation_year_input.text()
         }
         self.stacked_widget.setCurrentWidget(self.work_experience_widget)
 
@@ -69,8 +69,8 @@ class MainWindow(QMainWindow):
         self.user_info['work_experience'] = {
             'job_title': self.work_experience_widget.job_title_input.text(),
             'company': self.work_experience_widget.company_input.text(),
-            'start_date': self.work_experience_widget.start_date_input.date().toString("yyyy-MM-dd"),
-            'end_date': self.work_experience_widget.end_date_input.date().toString("yyyy-MM-dd"),
+            'start_date': self.work_experience_widget.start_date_input.text(),
+            'end_date': self.work_experience_widget.end_date_input.text(),
             'job_description': self.work_experience_widget.job_description_input.toPlainText()
         }
         self.stacked_widget.setCurrentWidget(self.skills_widget)

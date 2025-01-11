@@ -68,13 +68,13 @@ class PersonalInfoWidget(QWidget):
         main_layout.addWidget(left_layout_widget)
 
         right_layout = QVBoxLayout()
-
+        
         self.name_input = QLineEdit()
         self.contact_input = QLineEdit()
         self.email_input = QLineEdit()
         self.address_input = QLineEdit()
 
-        fields = [("Name", self.name_input), ("Contact", self.contact_input), ("Email", self.email_input), ("Address", self.address_input)]    
+        fields = [("Full Name", self.name_input), ("Phone Number", self.contact_input), ("Email", self.email_input), ("Address", self.address_input)]    
         for field_name, field_input in fields:
             field_label = QLabel(field_name)
             field_label.setStyleSheet("font-size: 16px;")
@@ -85,7 +85,7 @@ class PersonalInfoWidget(QWidget):
                     background-color: #ADD8E6; 
                 } 
                 QLineEdit:focus { 
-                    border: 2px solid yellow; 
+                    border: 1px solid red; 
                 }
             """)
             field_layout = QVBoxLayout()
@@ -94,7 +94,7 @@ class PersonalInfoWidget(QWidget):
             right_layout.addLayout(field_layout)
         right_layout.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
 
-        self.next_button = QPushButton('   Next >>   ')
+        self.next_button = QPushButton(' Next ---->> ')
         self.next_button.setCursor(QCursor(Qt.PointingHandCursor))
         self.next_button.setStyleSheet("""
             font-size: 16px;

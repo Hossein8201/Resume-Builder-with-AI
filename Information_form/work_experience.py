@@ -1,5 +1,5 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QLabel, QPushButton, QHBoxLayout, QSpacerItem, QSizePolicy, QSpinBox, QFormLayout, QTextEdit, QDateEdit
-from PyQt5.QtCore import Qt, QDate
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QLabel, QPushButton, QHBoxLayout, QSpacerItem, QSizePolicy, QTextEdit
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPalette, QColor, QPixmap, QCursor
 
 class WorkExperienceWidget(QWidget):
@@ -72,17 +72,17 @@ class WorkExperienceWidget(QWidget):
         
         self.job_title_input = QLineEdit()
         self.company_input = QLineEdit()
-        self.start_date_input = QDateEdit()
-        self.start_date_input.setCalendarPopup(True)
-        self.end_date_input = QDateEdit()
-        self.end_date_input.setCalendarPopup(True)
+        self.start_date_input = QLineEdit()
+        self.start_date_input.setPlaceholderText('MM-DD-YYYY')
+        self.end_date_input = QLineEdit()
+        self.end_date_input.setPlaceholderText('MM-DD-YYYY')
         self.job_description_input = QTextEdit()
         
         fields = [("Job Title", self.job_title_input), ("Company", self.company_input), ("Start Date", self.start_date_input), ("End Date", self.end_date_input), ("Job Description", self.job_description_input)]
         for field_name, field_input in fields:
             field_label = QLabel(field_name)
             field_label.setStyleSheet("font-size: 16px;")
-            if field_name != "Start Date" and field_name != "End Date" and field_name != "Job Description":
+            if  field_name != "Job Description":
                 field_input.setStyleSheet("""
                     QLineEdit { 
                         font-size: 16px; 
@@ -91,23 +91,6 @@ class WorkExperienceWidget(QWidget):
                     } 
                     QLineEdit:focus { 
                         border: 1px solid red; 
-                    }
-                """)
-            elif field_name != "Job Description":
-                field_input.setStyleSheet("""
-                    QDateEdit { 
-                        font-size: 16px; 
-                        border-radius: 10px; 
-                        background-color: #ADD8E6; 
-                    } 
-                    QDateEdit:focus { 
-                        border: 1px solid red; 
-                    }
-                    QCalendarWidget QToolButton { 
-                        color: black; 
-                    } 
-                    QCalendarWidget QMenu { 
-                        background-color: gray; 
                     }
                 """)
             else:
@@ -156,6 +139,8 @@ class WorkExperienceWidget(QWidget):
 
         self.job_title_input.textChanged.connect(self.check_fields)
         self.company_input.textChanged.connect(self.check_fields)
+        self.start_date_input.textChanged.connect(self.check_fields)
+        self.end_date_input.textChanged.connect(self.check_fields)
         self.job_description_input.textChanged.connect(self.check_fields)
 
         nav_layout = QHBoxLayout()
@@ -173,7 +158,7 @@ class WorkExperienceWidget(QWidget):
         self.setLayout(main_layout)
 
     def check_fields(self):
-        if self.job_title_input.text() and self.company_input.text() and self.job_description_input.toPlainText():
+        if self.job_title_input.text() and self.company_input.text() and self.job_description_input.toPlainText() and self.start_date_input.text() and self.end_date_input.text():
             self.next_button.setEnabled(True)
             self.next_button.setStyleSheet("""
                 QPushButton {

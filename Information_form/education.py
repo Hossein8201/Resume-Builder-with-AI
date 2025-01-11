@@ -1,5 +1,5 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QLabel, QPushButton, QHBoxLayout, QSpacerItem, QSizePolicy, QSpinBox
-from PyQt5.QtCore import Qt, QDate
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QLabel, QPushButton, QHBoxLayout, QSpacerItem, QSizePolicy
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPalette, QColor, QPixmap, QCursor
 
 class EducationWidget(QWidget):
@@ -72,43 +72,30 @@ class EducationWidget(QWidget):
 
         self.university_input = QLineEdit()
         self.degree_input = QLineEdit()
-        self.graduation_year_input = QSpinBox()
-        self.graduation_year_input.setRange(1900, 2100)
-        self.graduation_year_input.setValue(QDate.currentDate().year())
+        self.graduation_year_input = QLineEdit()
+        self.graduation_year_input.setPlaceholderText('YYYY')
         
         fields = [("University", self.university_input), ("Degree", self.degree_input), ("Graduation Year", self.graduation_year_input)]
         for field_name, field_input in fields:
             field_label = QLabel(field_name)
             field_label.setStyleSheet("font-size: 16px;")
-            if field_name != "Graduation Year":
-                field_input.setStyleSheet("""
-                    QLineEdit { 
-                        font-size: 16px; 
-                        border-radius: 10px; 
-                        background-color: #ADD8E6; 
-                    } 
-                    QLineEdit:focus { 
-                        border: 2px solid yellow; 
-                    }
-                """)
-            else:
-                field_input.setStyleSheet("""
-                    QSpinBox { 
-                        font-size: 16px; 
-                        border-radius: 10px; 
-                        background-color: #ADD8E6; 
-                    } 
-                    QSpinBox:focus { 
-                        border: 2px solid yellow; 
-                    }
-                """)
+            field_input.setStyleSheet("""
+                QLineEdit { 
+                    font-size: 16px; 
+                    border-radius: 10px; 
+                    background-color: #ADD8E6; 
+                }
+                QLineEdit:focus { 
+                    border: 1px solid red; 
+                }
+            """)
             field_layout = QVBoxLayout()
             field_layout.addWidget(field_label)
             field_layout.addWidget(field_input)
             right_layout.addLayout(field_layout)
         right_layout.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
 
-        self.next_button = QPushButton('   Next >>   ')
+        self.next_button = QPushButton(' Next ---->> ')
         self.next_button.setCursor(QCursor(Qt.PointingHandCursor))
         self.next_button.setStyleSheet("""
             font-size: 16px;
@@ -137,6 +124,7 @@ class EducationWidget(QWidget):
 
         self.university_input.textChanged.connect(self.check_fields)
         self.degree_input.textChanged.connect(self.check_fields)
+        self.graduation_year_input.textChanged.connect(self.check_fields)
 
         nav_layout = QHBoxLayout()
         nav_layout.addWidget(self.prev_button)
@@ -153,7 +141,7 @@ class EducationWidget(QWidget):
         self.setLayout(main_layout)
 
     def check_fields(self):
-        if self.university_input.text() and self.degree_input.text():
+        if self.university_input.text() and self.degree_input.text() and self.graduation_year_input.text():
             self.next_button.setEnabled(True)
             self.next_button.setStyleSheet("""
                 QPushButton {

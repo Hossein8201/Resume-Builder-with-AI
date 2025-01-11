@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QHBoxLayout, QSpacerItem, QSizePolicy, QFormLayout, QTextEdit
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QHBoxLayout, QSpacerItem, QSizePolicy, QTextEdit
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPalette, QColor, QPixmap, QCursor
 
@@ -93,7 +93,7 @@ class SkillsWidget(QWidget):
             right_layout.addLayout(field_layout)
         right_layout.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
 
-        self.save_button = QPushButton(' <save info> ')
+        self.save_button = QPushButton(' Save ---->> ')
         self.save_button.setCursor(QCursor(Qt.PointingHandCursor))
         self.save_button.setStyleSheet("""
             font-size: 16px;
