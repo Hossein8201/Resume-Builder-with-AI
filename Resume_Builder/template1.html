@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Builder</title>
+    <style>
+        @page {
+            size: A4;
+            margin-left: 0.5in;
+            margin-right: 0.5in;
+            margin-top: 1in;
+            margin-bottom: 1in;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            color: #333;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .container {
+            max-width: 7.27in;
+            margin: 0 auto;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 1.5em;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            letter-spacing: 2px;
+            margin: 0;
+        }
+
+        .header h2 {
+            font-size: 16px;
+            color: #555;
+            margin: 0.5em 0;
+        }
+
+        .contact {
+            text-align: center;
+            margin-bottom: 1.5em;
+        }
+
+        .contact p {
+            margin: 0.5em 0;
+        }
+
+        .section {
+            margin-bottom: 2em;
+            width: 95%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .section-professional-summary {
+            margin-bottom: 2em;
+            width: 92.5%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 0.5em;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 0.5em;
+            display: block;
+        }
+
+        .content {
+            line-height: 1.8;
+        }
+
+        .columns {
+            display: flex;
+            justify-content: space-between;
+            gap: 1em;
+        }
+
+        .column {
+            flex: 1;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
+
+        ul li {
+            margin-bottom: 1em;
+        }
+
+        .skills ul {
+            columns: 2;
+            gap: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>{{ name }}</h1>
+            <h2>{{ title }}</h2>
+        </div>
+
+        <div class="contact">
+            <p>{{ phone }}</p>
+            <p>{{ email }}</p>
+            <p>{{ address }}</p>
+        </div>
+
+        <div class="section-professional-summary">
+            <div class="section-title">Professional Summary</div>
+            <div class="content">
+                {{ professional_summary }}
+            </div>
+        </div>
+
+        <div class="section columns">
+            <div class="column">
+                <div class="section">
+                    <div class="section-title">Education</div>
+                    <p><strong>{{ education.degree }}</strong><br>{{ education.university }}<br>{{ education.graduation_year }}</p>
+                    <div class="content"></div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Skills</div>
+                    <ul>
+                        {% for skill in skills %}
+                            <li>{{ skill }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Certifications</div>
+                    <ul>
+                        {% for certification in certifications %}
+                            <li>{{ certification }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="column">
+                <div class="section">
+                    <div class="section-title">Work Experience</div>
+                    <p><strong>{{ work_experience.company }}</strong><br>{{ work_experience.job_title }}<br>{{ work_experience.start_date }} - {{ work_experience.end_date }}</p>
+                    <div class="content">
+                        {{ work_experience.job_description }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

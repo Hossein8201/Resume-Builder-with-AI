@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Template</title>
+    <style>
+        @page {
+            size: A4;
+            margin-left: 0.5in;
+            margin-right: 0.5in;
+            margin-top: 1in;
+            margin-bottom: 1in;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: white;
+            color: #333;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .container {
+            max-width: 7.27in;
+            margin: 0 auto;
+            background: #fff;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #007acc;
+            padding-bottom: 10px;
+        }
+
+        .header .name {
+            font-size: 28px;
+            font-weight: bold;
+            color: #007acc;
+        }
+
+        .header .contact {
+            font-size: 14px;
+            text-align: right;
+            line-height: 1.6;
+        }
+
+        .section {
+            margin-top: 20px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #007acc;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 0.5em;
+            margin-bottom: 1em;
+        }
+
+        .content {
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        ul li {
+            margin-bottom: 0.5em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="name">
+                {{ name }}
+            </div>
+            <div class="contact">
+                <p>{{ phone }}</p>
+                <p>{{ email }}</p>
+                <p>{{ address }}</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Professional Summary</div>
+            <div class="content">
+                {{ professional_summary }}
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Work Experience</div>
+            <div class="content">
+                <p><strong>{{ work_experience.job_title }} | {{ work_experience.start_date }} - {{ work_experience.end_date }}</strong></p>
+                <p>{{ work_experience.company }}</p>
+                <ul>
+                    {{ work_experience.description }}
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Education</div>
+            <div class="content">
+                <p><strong>{{ education.degree }}</strong></p>
+                <p>{{ education.university }} | {{ education.graduation_year }}</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Certifications</div>
+            <div class="content">
+                <ul>
+                    {% for certification in certifications %}
+                        <li>{{ certification }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Skills</div>
+            <div class="content">
+                <ul>
+                    {% for skill in skills %}
+                        <li>{{ skill }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

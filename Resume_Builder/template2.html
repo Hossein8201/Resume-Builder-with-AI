@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Resume Template</title>
+    <style>
+        @page {
+            size: A4;
+            margin-top: 0.5in;
+            margin-bottom: 0.5in;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: white;
+            color: #333;
+            line-height: 1.4;
+        }
+        .container {
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .header {
+            background: linear-gradient(135deg, #3f51b5, #5c6bc0);
+            width: 100%;
+            color: #fff;
+            padding: 15px 10px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .header h2 {
+            margin: 5px 0 0;
+            font-size: 12px;
+            font-weight: 300;
+        }
+        .section {
+            width: 100%;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .section:last-child {
+            border-bottom: none;
+        }
+        .section h3 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #3f51b5;
+            position: relative;
+        }
+        .section h3::after {
+            content: '';
+            width: 50px;
+            height: 3px;
+            background: #3f51b5;
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+        }
+        .contact-info, .skills, .certifications {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .contact-info div, .skills div, .certifications div {
+            flex: 1 1 calc(33% - 15px);
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 3px;
+            text-align: center;
+            font-size: 10px;
+        }
+        .skills div, .certifications div {
+            font-weight: bold;
+            background: #f0f4ff;
+            color: #3f51b5;
+        }
+        .profile-summary {
+            text-align: justify;
+        }
+        .experience {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .experience li {
+            margin-bottom: 12px;
+        }
+        .experience h4 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: bold;
+            color: #3f51b5;
+        }
+        .experience p {
+            margin: 5px 0 0;
+            font-size: 12px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>{{ name }}</h1>
+            <h2>{{ title }}</h2>
+        </div>
+
+        <div class="section">
+            <h3>Contact</h3>
+            <div class="contact-info">
+                <div>{{ phone }}</div>
+                <div>{{ email }}</div>
+                <div>{{ address }}</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Education</h3>
+            <p><strong>{{ education.university }}</strong><br>{{ education.degree }} ({{ education.graduation_year}})</p>
+        </div>
+
+        <div class="section">
+            <h3>Skills</h3>
+            <div class="skills">
+                {% for skill in skills %}
+                    <div>{{ skill }}</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Certifications</h3>
+            <div class="certifications">
+                {% for certification in certifications %}
+                    <div>{{ certification }}</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="section profile-summary">
+            <h3>Professional Summary</h3>
+            <p>{{ professional_summary }}</p>
+        </div>
+
+        <div class="section">
+            <h3>Work Experience</h3>
+            <ul class="experience">
+                <li>
+                    <h4>{{ work_experience.company }} ({{ work_experience.start_date }} -{{ work_experience.end_date }})</h4>
+                    <p><strong>{{ work_experience.job_title }}</strong></p>
+                    <p>{{ work_experience.job_description }}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
