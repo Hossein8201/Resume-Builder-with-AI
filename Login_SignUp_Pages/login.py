@@ -40,65 +40,24 @@ class LoginWidget(QWidget):
 
         self.username_input = QLineEdit()
         self.username_input.setPlaceholderText('Username')
-        self.username_input.setStyleSheet("""
-            QLineEdit { 
-                background-color: lightblue; 
-                border-radius: 10px; 
-                font-size: 20px; 
-            } 
-            QLineEdit:focus { 
-                border: 2px solid green;   
-            }
-        """)        
+        self.QLineEdit_style(self.username_input)     
         right_layout.addWidget(self.username_input)
 
         self.password_input = QLineEdit()
         self.password_input.setPlaceholderText('Password')
         self.password_input.setEchoMode(QLineEdit.Password)
-        self.password_input.setStyleSheet("""
-            QLineEdit { 
-                background-color: lightblue; 
-                border-radius: 10px; 
-                font-size: 20px; 
-            } 
-            QLineEdit:focus { 
-                border: 2px solid green;   
-            }
-        """)
+        self.QLineEdit_style(self.password_input)
         right_layout.addWidget(self.password_input)
 
         self.login_button = QPushButton('Login')
         self.login_button.setCursor(QCursor(Qt.PointingHandCursor))
-        self.login_button.setStyleSheet("""
-            QPushButton {
-                background-color: lightgreen;
-                color: black;
-                border-radius: 10px;
-                font-size: 20px;
-            }
-            QPushButton:hover {
-                background-color: green;
-                color: white;
-            }
-        """)
+        self.style_button(self.login_button)
         self.login_button.clicked.connect(self.login)
         right_layout.addWidget(self.login_button)
 
         self.register_button = QPushButton('Go to Sign Up')
         self.register_button.setCursor(QCursor(Qt.PointingHandCursor))
-        self.register_button.setStyleSheet("""
-            QPushButton {
-                background-color: lightgreen;
-                color: black;
-                border-radius: 10px;
-                font-size: 20px;
-            }
-            QPushButton:hover {
-                background-color: green;
-                color: white;
-
-            }
-        """)
+        self.style_button(self.register_button)
         self.register_button.clicked.connect(self.switch_to_register)
         right_layout.addWidget(self.register_button)
 
@@ -109,6 +68,32 @@ class LoginWidget(QWidget):
         pixmap = QPixmap(f'.images/{self.image_index}.png')
         self.image_label.setPixmap(pixmap)
         self.image_index = (self.image_index % 5) + 1
+        
+    def QLineEdit_style(self, lineEdit):
+        lineEdit.setStyleSheet("""
+            QLineEdit { 
+                background-color: lightblue; 
+                border-radius: 10px; 
+                font-size: 20px; 
+            } 
+            QLineEdit:focus { 
+                border: 2px solid green;   
+            }
+        """)
+        
+    def style_button(self, button):
+        button.setStyleSheet("""
+            QPushButton {
+                background-color: lightgreen;
+                color: black;
+                border-radius: 10px;
+                font-size: 20px;
+            }
+            QPushButton:hover {
+                background-color: green;
+                color: white;
+            }
+        """)
 
     def login(self):
         username = self.username_input.text()

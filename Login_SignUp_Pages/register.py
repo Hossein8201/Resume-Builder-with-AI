@@ -40,30 +40,12 @@ class RegisterWidget(QWidget):
 
         self.username_input = QLineEdit()
         self.username_input.setPlaceholderText('Username')
-        self.username_input.setStyleSheet("""
-            QLineEdit { 
-                background-color: lightblue; 
-                border-radius: 10px; 
-                font-size: 20px; 
-            } 
-            QLineEdit:focus { 
-                border: 2px solid green;   
-            }
-        """)        
+        self.QLineEdit_style(self.username_input)     
         right_layout.addWidget(self.username_input)
 
         self.email_input = QLineEdit()
         self.email_input.setPlaceholderText('Email')
-        self.email_input.setStyleSheet("""
-            QLineEdit { 
-                background-color: lightblue; 
-                border-radius: 10px; 
-                font-size: 20px; 
-            } 
-            QLineEdit:focus { 
-                border: 2px solid green;   
-            }
-        """)        
+        self.QLineEdit_style(self.email_input)       
         right_layout.addWidget(self.email_input)
 
         email_regex = QRegExp('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
@@ -73,66 +55,24 @@ class RegisterWidget(QWidget):
         self.password_input = QLineEdit()
         self.password_input.setPlaceholderText('Password')
         self.password_input.setEchoMode(QLineEdit.Password)
-        self.password_input.setStyleSheet("""
-            QLineEdit { 
-                background-color: lightblue; 
-                border-radius: 10px; 
-                font-size: 20px; 
-            } 
-            QLineEdit:focus { 
-                border: 2px solid green;   
-            }
-        """)
+        self.QLineEdit_style(self.password_input)
         right_layout.addWidget(self.password_input)
 
         self.confirm_password_input = QLineEdit()
         self.confirm_password_input.setPlaceholderText('Confirm Password')
         self.confirm_password_input.setEchoMode(QLineEdit.Password)
-        self.confirm_password_input.setStyleSheet("""
-            QLineEdit { 
-                background-color: lightblue; 
-                border-radius: 10px; 
-                font-size: 20px; 
-            } 
-            QLineEdit:focus { 
-                border: 2px solid green;   
-            }
-        """)      
+        self.QLineEdit_style(self.confirm_password_input)    
         right_layout.addWidget(self.confirm_password_input)
 
         self.register_button = QPushButton('Sign Up')
         self.register_button.setCursor(QCursor(Qt.PointingHandCursor))
-        self.register_button.setStyleSheet("""
-            QPushButton {
-                background-color: lightgreen;
-                color: black;
-                border-radius: 10px;
-                font-size: 20px;
-            }
-            QPushButton:hover {
-                background-color: green;
-                color: white;
-
-            }
-        """)
+        self.style_button(self.register_button)
         self.register_button.clicked.connect(self.register)
         right_layout.addWidget(self.register_button)
 
         self.login_button = QPushButton('Back to Login')
         self.login_button.setCursor(QCursor(Qt.PointingHandCursor))
-        self.login_button.setStyleSheet("""
-            QPushButton {
-                background-color: lightgreen;
-                color: black;
-                border-radius: 10px;
-                font-size: 20px;
-            }
-            QPushButton:hover {
-                background-color: green;
-                color: white;
-
-            }
-        """)
+        self.style_button(self.login_button)
         self.login_button.clicked.connect(self.switch_to_login)
         right_layout.addWidget(self.login_button)
 
@@ -144,6 +84,32 @@ class RegisterWidget(QWidget):
         self.image_label.setPixmap(pixmap)
         self.image_index = (self.image_index % 5) + 1
 
+    def QLineEdit_style(self, lineEdit):
+        lineEdit.setStyleSheet("""
+            QLineEdit { 
+                background-color: lightblue; 
+                border-radius: 10px; 
+                font-size: 20px; 
+            } 
+            QLineEdit:focus { 
+                border: 2px solid green;   
+            }
+        """)    
+    
+    def style_button(self, button):
+        button.setStyleSheet("""
+            QPushButton {
+                background-color: lightgreen;
+                color: black;
+                border-radius: 10px;
+                font-size: 20px;
+            }
+            QPushButton:hover {
+                background-color: green;
+                color: white;
+            }
+        """)
+        
     def register(self):
         username = self.username_input.text()
         email = self.email_input.text()
