@@ -106,26 +106,25 @@ class ResumeBuilderWidget(QWidget):
         info = {
             'username': user_info[1],
             'name': user_info[2],
-            'title': "Software Developer",
-            'phone': user_info[3],
-            'email': user_info[4],
-            'address': user_info[5],
-            'professional_summary': "I am a software developer with 5 years of experience in developing web applications.\n" +
-                "I have a strong understanding of web technologies and have worked with various frameworks and libraries.",
+            'title': user_info[3],
+            'phone': user_info[4],
+            'email': user_info[5],
+            'address': user_info[6],
+            'professional_summary': user_info[7],
             "education": {
-                'university': user_info[6],
-                'degree': user_info[7],
-                'graduation_year': user_info[8]
+                'university': user_info[8],
+                'degree': user_info[9],
+                'graduation_year': user_info[10]
             },
             'work_experience': {
-                'job_title': user_info[9],
-                'company': user_info[10],
-                'start_date': user_info[11],
-                'end_date': user_info[12],
-                'job_description': user_info[13]
+                'job_title': user_info[11],
+                'company': user_info[12],
+                'start_date': user_info[13],
+                'end_date': user_info[14],
+                'job_description': user_info[15]
             },
-            'skills': user_info[14].split('\n'),
-            'certifications': user_info[15].split('\n')
+            'skills': user_info[16].split('\n'),
+            'certifications': user_info[17].split('\n')
         }
         return info
 
