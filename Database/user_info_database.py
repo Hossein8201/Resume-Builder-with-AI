@@ -12,16 +12,18 @@ class UserInformationDatabase:
                                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                                     username TEXT,
                                     name TEXT,
+                                    title TEXT,
                                     contact TEXT,
                                     email TEXT,
                                     address TEXT,
+                                    professional_summary TEXT,
                                     university TEXT,
                                     degree TEXT,
-                                    graduation_year INTEGER,
+                                    graduation_year TEXT,
                                     job_title TEXT,
                                     company TEXT,
-                                    start_date TEXT,
-                                    end_date TEXT,
+                                    start_date INTEGER,
+                                    end_date INTEGER,
                                     job_description TEXT,
                                     skills TEXT,
                                     certifications TEXT
@@ -35,11 +37,11 @@ class UserInformationDatabase:
         self.delete_existing_user_info(info[0])
         with self.conn:
             self.conn.execute('''INSERT INTO user_information (
-                                    username, name, contact, email, address,
+                                    username, name, title, contact, email, address, professional_summary,
                                     university, degree, graduation_year,
                                     job_title, company, start_date, end_date,
                                     job_description, skills, certifications
-                                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', info)
+                                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', info)
     
     def get_user_info(self, username):
         with self.conn:

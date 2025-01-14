@@ -1,6 +1,9 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QLabel, QPushButton, QHBoxLayout, QSpacerItem, QSizePolicy
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QLabel, QPushButton, QHBoxLayout, QSpacerItem, QSizePolicy, QMessageBox
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPalette, QColor, QPixmap, QCursor
+import re
+from textblob import TextBlob
+import datetime
 
 class EducationWidget(QWidget):
     def __init__(self, switch_to_next, switch_to_prev):
@@ -73,7 +76,7 @@ class EducationWidget(QWidget):
         self.university_input = QLineEdit()
         self.degree_input = QLineEdit()
         self.graduation_year_input = QLineEdit()
-        self.graduation_year_input.setPlaceholderText('YYYY')
+        self.graduation_year_input.setPlaceholderText('MM-DD-YYYY')
         
         fields = [("University", self.university_input), ("Degree", self.degree_input), ("Graduation Year", self.graduation_year_input)]
         for field_name, field_input in fields:
@@ -94,6 +97,22 @@ class EducationWidget(QWidget):
             field_layout.addWidget(field_input)
             right_layout.addLayout(field_layout)
         right_layout.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
+        
+        self.correction_button = QPushButton('Apply Corrections') 
+        self.correction_button.setCursor(QCursor(Qt.PointingHandCursor)) 
+        self.correction_button.setStyleSheet("""
+            QPushButton {
+                font-size: 16px;
+                border-radius: 10px;
+                background-color: white;
+                border: 2px solid gold;
+            }
+            QPushButton:hover { 
+                background-color: gold; 
+                color: white;
+            }
+        """) 
+        self.correction_button.clicked.connect(self.apply_corrections)
 
         self.next_button = QPushButton(' Next ---->> ')
         self.next_button.setCursor(QCursor(Qt.PointingHandCursor))
@@ -104,7 +123,7 @@ class EducationWidget(QWidget):
             border: 2px solid lightgray;
         """)
         self.next_button.setEnabled(False)
-        self.next_button.clicked.connect(self.switch_to_next)
+        self.next_button.clicked.connect(self.next_page)
 
         self.prev_button = QPushButton(' << Previous ')
         self.prev_button.setCursor(QCursor(Qt.PointingHandCursor))
@@ -129,6 +148,7 @@ class EducationWidget(QWidget):
         nav_layout = QHBoxLayout()
         nav_layout.addWidget(self.prev_button)
         nav_layout.addStretch()
+        nav_layout.addWidget(self.correction_button)
         nav_layout.addWidget(self.next_button)
         right_layout.addLayout(nav_layout)
         
@@ -141,7 +161,11 @@ class EducationWidget(QWidget):
         self.setLayout(main_layout)
 
     def check_fields(self):
-        if self.university_input.text() and self.degree_input.text() and self.graduation_year_input.text():
+        university = self.university_input.text()
+        degree = self.degree_input.text()
+        graduation_year = self.graduation_year_input.text()
+            
+        if university and degree and graduation_year:
             self.next_button.setEnabled(True)
             self.next_button.setStyleSheet("""
                 QPushButton {
@@ -163,3 +187,21 @@ class EducationWidget(QWidget):
                 background-color: lightgray;
                 border: 2px solid lightgray;
             """)
+            
+    def apply_corrections(self):
+        university_corrected = str(TextBlob(self.university_input.text()).correct())
+        degree_corrected = str(TextBlob(self.degree_input.text()).correct())
+        
+        self.university_input.setText(university_corrected)
+        self.degree_input.setText(degree_corrected) 
+        
+    def validate_graduation_year(self, date): 
+        pattern = r'^\d{2}-\d{2}-\d{4}$'  
+        return bool(re.match(pattern, date)) and int(date.split('-')[2]) < datetime.datetime.now().year
+    
+    def next_page(self):
+        if not self.validate_graduation_year(self.graduation_year_input.text()):
+            QMessageBox.critical(self, "Invalid Graduation Year", "Please enter a valid graduation year.")
+            return
+        else:
+            self.switch_to_next()

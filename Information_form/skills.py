@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QHBoxLayout, QSpacerItem, QSizePolicy, QTextEdit
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPalette, QColor, QPixmap, QCursor
+from textblob import TextBlob
 
 class SkillsWidget(QWidget):
     def __init__(self, save_info, switch_to_prev):
@@ -92,6 +93,22 @@ class SkillsWidget(QWidget):
             field_layout.addWidget(field_input)
             right_layout.addLayout(field_layout)
         right_layout.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
+        
+        self.correction_button = QPushButton('Apply Corrections') 
+        self.correction_button.setCursor(QCursor(Qt.PointingHandCursor)) 
+        self.correction_button.setStyleSheet("""
+            QPushButton {
+                font-size: 16px;
+                border-radius: 10px;
+                background-color: white;
+                border: 2px solid gold;
+            }
+            QPushButton:hover { 
+                background-color: gold; 
+                color: white;
+            }
+        """) 
+        self.correction_button.clicked.connect(self.apply_corrections)
 
         self.save_button = QPushButton(' Save ---->> ')
         self.save_button.setCursor(QCursor(Qt.PointingHandCursor))
@@ -102,7 +119,7 @@ class SkillsWidget(QWidget):
             border: 2px solid lightgray;
         """)
         self.save_button.setEnabled(False)
-        self.save_button.clicked.connect(self.save_info)
+        self.save_button.clicked.connect(self.save_info )
 
         self.prev_button = QPushButton(' << Previous ')
         self.prev_button.setCursor(QCursor(Qt.PointingHandCursor))
@@ -126,6 +143,7 @@ class SkillsWidget(QWidget):
         nav_layout = QHBoxLayout()
         nav_layout.addWidget(self.prev_button)
         nav_layout.addStretch()
+        nav_layout.addWidget(self.correction_button)
         nav_layout.addWidget(self.save_button)
         right_layout.addLayout(nav_layout)
         
@@ -160,3 +178,11 @@ class SkillsWidget(QWidget):
                 background-color: lightgray;
                 border: 2px solid lightgray;
             """)
+
+    def apply_corrections(self):
+        skills_corrected = str(TextBlob(self.skills_input.toPlainText()).correct())
+        certifications_corrected = str(TextBlob(self.certifications_input.toPlainText()).correct())
+        
+        self.skills_input.setPlainText(skills_corrected)
+        self.certifications_input.setPlainText(certifications_corrected)
+    

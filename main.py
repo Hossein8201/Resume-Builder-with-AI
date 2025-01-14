@@ -51,9 +51,11 @@ class MainWindow(QMainWindow):
     def switch_to_education(self):
         self.user_info['personal_info'] = {
             'name': self.personal_info_widget.name_input.text(),
+            'title': self.personal_info_widget.title_input.text(),
             'contact': self.personal_info_widget.contact_input.text(),
             'email': self.personal_info_widget.email_input.text(),
-            'address': self.personal_info_widget.address_input.text()
+            'address': self.personal_info_widget.address_input.text(),
+            'professional_summary': self.personal_info_widget.professional_input.toPlainText()
         }
         self.stacked_widget.setCurrentWidget(self.education_widget)
 
@@ -90,9 +92,11 @@ class MainWindow(QMainWindow):
             info = (
                 self.user_info['username'],
                 self.user_info['personal_info']['name'],
+                self.user_info['personal_info']['title'],
                 self.user_info['personal_info']['contact'],
                 self.user_info['personal_info']['email'],
                 self.user_info['personal_info']['address'],
+                self.user_info['personal_info']['professional_summary'],
                 self.user_info['education']['university'],
                 self.user_info['education']['degree'],
                 self.user_info['education']['graduation_year'],

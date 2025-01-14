@@ -1,6 +1,9 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QLabel, QPushButton, QHBoxLayout, QSpacerItem, QSizePolicy, QTextEdit
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QLabel, QPushButton, QHBoxLayout, QSpacerItem, QSizePolicy, QTextEdit, QMessageBox
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPalette, QColor, QPixmap, QCursor
+import re
+from textblob import TextBlob
+import datetime
 
 class WorkExperienceWidget(QWidget):
     def __init__(self, switch_to_next, switch_to_prev):
@@ -73,9 +76,9 @@ class WorkExperienceWidget(QWidget):
         self.job_title_input = QLineEdit()
         self.company_input = QLineEdit()
         self.start_date_input = QLineEdit()
-        self.start_date_input.setPlaceholderText('MM-DD-YYYY')
+        self.start_date_input.setPlaceholderText('YYYY')
         self.end_date_input = QLineEdit()
-        self.end_date_input.setPlaceholderText('MM-DD-YYYY')
+        self.end_date_input.setPlaceholderText('YYYY')
         self.job_description_input = QTextEdit()
         
         fields = [("Job Title", self.job_title_input), ("Company", self.company_input), ("Start Date", self.start_date_input), ("End Date", self.end_date_input), ("Job Description", self.job_description_input)]
@@ -109,6 +112,22 @@ class WorkExperienceWidget(QWidget):
             field_layout.addWidget(field_input)
             right_layout.addLayout(field_layout)
         right_layout.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
+        
+        self.correction_button = QPushButton('Apply Corrections') 
+        self.correction_button.setCursor(QCursor(Qt.PointingHandCursor)) 
+        self.correction_button.setStyleSheet("""
+            QPushButton {
+                font-size: 16px;
+                border-radius: 10px;
+                background-color: white;
+                border: 2px solid gold;
+            }
+            QPushButton:hover { 
+                background-color: gold; 
+                color: white;
+            }
+        """) 
+        self.correction_button.clicked.connect(self.apply_corrections)
 
         self.next_button = QPushButton(' Next ---->> ')
         self.next_button.setCursor(QCursor(Qt.PointingHandCursor))
@@ -119,7 +138,7 @@ class WorkExperienceWidget(QWidget):
             border: 2px solid lightgray;
         """)
         self.next_button.setEnabled(False)
-        self.next_button.clicked.connect(self.switch_to_next)
+        self.next_button.clicked.connect(self.next_page)
 
         self.prev_button = QPushButton(' << Previous ')
         self.prev_button.setCursor(QCursor(Qt.PointingHandCursor))
@@ -146,6 +165,7 @@ class WorkExperienceWidget(QWidget):
         nav_layout = QHBoxLayout()
         nav_layout.addWidget(self.prev_button)
         nav_layout.addStretch()
+        nav_layout.addWidget(self.correction_button)
         nav_layout.addWidget(self.next_button)
         right_layout.addLayout(nav_layout)
         
@@ -158,7 +178,13 @@ class WorkExperienceWidget(QWidget):
         self.setLayout(main_layout)
 
     def check_fields(self):
-        if self.job_title_input.text() and self.company_input.text() and self.job_description_input.toPlainText() and self.start_date_input.text() and self.end_date_input.text():
+        job_title = self.job_title_input.text()
+        company = self.company_input.text()
+        job_description = self.job_description_input.toPlainText()
+        start_date = self.start_date_input.text()
+        end_date = self.end_date_input.text()
+
+        if job_title and company and job_description and start_date and end_date:
             self.next_button.setEnabled(True)
             self.next_button.setStyleSheet("""
                 QPushButton {
@@ -180,3 +206,23 @@ class WorkExperienceWidget(QWidget):
                 background-color: lightgray;
                 border: 2px solid lightgray;
             """)
+            
+    def apply_corrections(self):
+        job_title_corrected = str(TextBlob(self.job_title_input.text()).correct())
+        company_corrected = str(TextBlob(self.company_input.text()).correct())
+        job_description_corrected = str(TextBlob(self.job_description_input.toPlainText()).correct())
+        
+        self.job_title_input.setText(job_title_corrected)
+        self.company_input.setText(company_corrected)
+        self.job_description_input.setPlainText(job_description_corrected)
+        
+    def validate_date(self, date):
+        pattern = r'^\d{4}$'
+        return bool(re.match(pattern, date)) and int(date) <= datetime.datetime.now().year and int(self.start_date_input.text()) < int(self.end_date_input.text())
+    
+    def next_page(self):
+        if not self.validate_date(self.end_date_input.text()) or not self.validate_date(self.start_date_input.text()):
+            QMessageBox.critical(self, "Invalid Date", "Please enter a valid date.")
+            return
+        else:
+            self.switch_to_next()  

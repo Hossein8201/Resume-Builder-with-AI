@@ -1,6 +1,7 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QLabel, QPushButton, QHBoxLayout, QSpacerItem, QSizePolicy
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPalette, QColor, QPixmap, QCursor
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QLabel, QPushButton, QHBoxLayout, QSpacerItem, QSizePolicy, QTextEdit, QMessageBox
+from PyQt5.QtCore import Qt, QRegExp
+from PyQt5.QtGui import QPalette, QColor, QPixmap, QCursor, QRegExpValidator
+from textblob import TextBlob
 
 class PersonalInfoWidget(QWidget):
     def __init__(self, switch_to_next):
@@ -70,29 +71,59 @@ class PersonalInfoWidget(QWidget):
         right_layout = QVBoxLayout()
         
         self.name_input = QLineEdit()
+        self.title_input = QLineEdit()
         self.contact_input = QLineEdit()
         self.email_input = QLineEdit()
         self.address_input = QLineEdit()
+        self.professional_input = QTextEdit()
 
-        fields = [("Full Name", self.name_input), ("Phone Number", self.contact_input), ("Email", self.email_input), ("Address", self.address_input)]    
+        fields = [("Full Name", self.name_input), ("Title", self.title_input), ("Phone Number", self.contact_input), ("Email", self.email_input), ("Address", self.address_input), ("Professional Summary", self.professional_input)]    
         for field_name, field_input in fields:
             field_label = QLabel(field_name)
             field_label.setStyleSheet("font-size: 16px;")
-            field_input.setStyleSheet("""
-                QLineEdit { 
-                    font-size: 16px; 
-                    border-radius: 10px; 
-                    background-color: #ADD8E6; 
-                } 
-                QLineEdit:focus { 
-                    border: 1px solid red; 
-                }
-            """)
+            if field_name != "Professional Summary":
+                field_input.setStyleSheet("""
+                    QLineEdit { 
+                        font-size: 16px; 
+                        border-radius: 10px; 
+                        background-color: #ADD8E6; 
+                    } 
+                    QLineEdit:focus { 
+                        border: 1px solid red; 
+                    }
+                """)
+            else:
+                field_input.setStyleSheet("""
+                    QTextEdit { 
+                        font-size: 16px; 
+                        border-radius: 10px; 
+                        background-color: #ADD8E6; 
+                    } 
+                    QTextEdit:focus { 
+                        border: 1px solid red; 
+                    }
+                """)
             field_layout = QVBoxLayout()
             field_layout.addWidget(field_label)
             field_layout.addWidget(field_input)
             right_layout.addLayout(field_layout)
         right_layout.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
+        
+        self.correction_button = QPushButton('Apply Corrections') 
+        self.correction_button.setCursor(QCursor(Qt.PointingHandCursor)) 
+        self.correction_button.setStyleSheet("""
+            QPushButton {
+                font-size: 16px;
+                border-radius: 10px;
+                background-color: white;
+                border: 2px solid gold;
+            }
+            QPushButton:hover { 
+                background-color: gold; 
+                color: white;
+            }
+        """) 
+        self.correction_button.clicked.connect(self.apply_corrections)
 
         self.next_button = QPushButton(' Next ---->> ')
         self.next_button.setCursor(QCursor(Qt.PointingHandCursor))
@@ -103,15 +134,22 @@ class PersonalInfoWidget(QWidget):
             border: 2px solid lightgray;
         """)
         self.next_button.setEnabled(False)
-        self.next_button.clicked.connect(self.switch_to_next)
+        self.next_button.clicked.connect(self.next_page)
         
         self.name_input.textChanged.connect(self.check_fields)
+        self.title_input.textChanged.connect(self.check_fields)
         self.contact_input.textChanged.connect(self.check_fields)
         self.email_input.textChanged.connect(self.check_fields)
         self.address_input.textChanged.connect(self.check_fields)
+        self.professional_input.textChanged.connect(self.check_fields)
+        
+        email_regex = QRegExp('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+        email_validator = QRegExpValidator(email_regex, self.email_input)
+        self.email_input.setValidator(email_validator)
 
         nav_layout = QHBoxLayout()
         nav_layout.addStretch()
+        nav_layout.addWidget(self.correction_button)
         nav_layout.addWidget(self.next_button)
         right_layout.addLayout(nav_layout)
 
@@ -124,25 +162,50 @@ class PersonalInfoWidget(QWidget):
         self.setLayout(main_layout)
 
     def check_fields(self):
-        if self.name_input.text() and self.contact_input.text() and self.email_input.text() and self.address_input.text():
+        name = self.name_input.text()
+        title = self.title_input.text()
+        contact = self.contact_input.text()
+        email = self.email_input.text()
+        address = self.address_input.text()
+        professional = self.professional_input.toPlainText()
+
+        if name and title and contact and email and address and professional:
             self.next_button.setEnabled(True)
             self.next_button.setStyleSheet("""
                 QPushButton {
-                    font-size: 16px;
+                    font-size: 16px;    
                     border-radius: 10px;
                     background-color: white;
                     border: 2px solid green;
                 }
-                QPushButton:hover { 
-                    background-color: green; 
-                    color: white; 
-                }
+                QPushButton:hover {
+                    background-color: green;
+                    color: white;    
+                }    
             """)
         else:
             self.next_button.setEnabled(False)
-            self.next_button.setStyleSheet("""
-                font-size: 16px;    
+            self.next_button.setStyleSheet("""  
+                font-size: 16px;
                 border-radius: 10px;
                 background-color: lightgray;
                 border: 2px solid lightgray;
             """)
+            
+    def apply_corrections(self):
+        name_corrected = str(TextBlob(self.name_input.text()).correct())
+        title_corrected = str(TextBlob(self.title_input.text()).correct())
+        address_corrected = str(TextBlob(self.address_input.text()).correct())
+        professional_corrected = str(TextBlob(self.professional_input.toPlainText()).correct())
+
+        self.name_input.setText(name_corrected)
+        self.title_input.setText(title_corrected)
+        self.address_input.setText(address_corrected)
+        self.professional_input.setPlainText(professional_corrected)
+            
+    def next_page(self):
+        if not self.email_input.hasAcceptableInput():
+           QMessageBox.critical(self, "Invalid email", "Please enter a valid email address.")
+           return
+        else:
+            self.switch_to_next()
